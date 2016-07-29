@@ -48,7 +48,7 @@
   {
       "enabled": false,
       "api_key": "",
-	  "channel_name": "",
+      "channel_name": "",
       "push_ids": []
 
   },
