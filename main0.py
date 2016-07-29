@@ -111,6 +111,7 @@ def do_settings():
     global interval
     global F_LIMIT
     global pb
+	global pb_channel
     global PUSHPOKS
 
     parser = argparse.ArgumentParser()
@@ -215,10 +216,12 @@ def do_settings():
         try:
             pb = Pushbullet(allsettings['pushbullet']['api_key'])
             PUSHPOKS=set(allsettings['pushbullet']['push_ids'])
+			pb_channel = allsettings['pushbullet']['channel_name']
         except Exception as e:
             print('[-] Pushbullet error, invalid key, {}'.format(e))
             print('[-] Pushbullet will be disabled.')
             pb = None
+			pb_channel = None
             PUSHPOKS = None
 
 def prune_data():
@@ -647,7 +650,10 @@ def main():
 
                                 if pb is not None:
                                      if wild.pokemon_data.pokemon_id in PUSHPOKS:
-                                        pb.push_link("<<Pokemon: {}>>  <<Timer: {}s>>".format(pokemons[wild.pokemon_data.pokemon_id],int(wild.time_till_hidden_ms/1000.0)), 'http://www.google.com/maps/place/{},{}'.format(wild.latitude,wild.longitude))
+										if pb_channel:
+											pb.get_channel(pb_channel).push_link("<<Pokemon: {}>>  <<Timer: {}s>>".format(pokemons[wild.pokemon_data.pokemon_id],int(wild.time_till_hidden_ms/1000.0)), 'http://www.google.com/maps/place/{},{}'.format(wild.latitude,wild.longitude))
+										else
+											pb.push_link("<<Pokemon: {}>>  <<Timer: {}s>>".format(pokemons[wild.pokemon_data.pokemon_id],int(wild.time_till_hidden_ms/1000.0)), 'http://www.google.com/maps/place/{},{}'.format(wild.latitude,wild.longitude))
 
                                 if LOGGING:
                                     other = LatLng.from_degrees(wild.latitude, wild.longitude)
