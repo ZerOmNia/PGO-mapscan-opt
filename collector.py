@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import json
 import numbers
 import os
@@ -85,7 +87,7 @@ def wait(seconds, result=None):
 
 
 def find_files():
-    pattern = re.compile("spawns[0-9]*\..+_.+\.json")
+    pattern = re.compile("spawns[0-9]*\..+_.+(\.json|\.txt)")
     ignored = []
     if os.path.isfile(ignore_file):
         with open(ignore_file) as f:
